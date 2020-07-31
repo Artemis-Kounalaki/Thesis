@@ -7,7 +7,7 @@ output: html_document
 ---
 
 <br />
-**1. Download the data.**
+**1. Download the data**
 
 In order to finding duplicated regions in human, protein sequences are downloaded from Ensembl db.
 <br />
@@ -27,7 +27,7 @@ gunzip Homo_sapiens.GRCh38.pep.all.fa.gz
 
 ```
 <br />
-**2. This is the code for cleaning the fasta file of human protein sequences.**
+**2. This is the code for cleaning the fasta file of human protein sequences**
 
 Find scaffold regions - unknown regions-, isoforms and haplotypic regions.
 Make a file with these lines.
