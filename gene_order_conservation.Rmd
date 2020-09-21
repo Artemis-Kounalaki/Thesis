@@ -106,7 +106,7 @@ blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_human -e
 In order to avoid finding overlapped genes, it is appropriate to exclude those genes whose position in chromosome is inside another gene's position.
 <br />
 So, we get those ids that are used in Blastp.
-```{bash}
+```{r eval=FALSE}
 cd $HOME/conserved_gene_order/reference_human
 grep '>' human_reference_cl.fa> ids.txt
 
