@@ -5,7 +5,7 @@ author: "Artemis Kounalaki"
 
 **1. Download the data**
 
-In order to finding duplicated regions in human, protein sequences are downloaded from Ensembl db.
+In order to find duplicated regions in human, protein sequences are downloaded from Ensembl db.
 <br />
 
 ```
@@ -34,6 +34,7 @@ Remove these lines from the inital file with human protein sequences.
 
 ```
 #scaffolds
+
 cd $HOME/conserved_gene_order/human_reference
 grep -A 1 -w 'scaffold' Homo_sapiens.GRCh38.pep.all.fa> scaf.sed
 sed '/--/d' ./scaf.sed> scaff.sed
@@ -42,21 +43,18 @@ grep -Fvx -f scaff.sed Homo_sapiens.GRCh38.pep.all.fa >reference.fa
 
 
 # isoforms
+
 grep -A 1 -w 'isoform' reference.fa> isoform.sed
 grep -Fvx -f isoform.sed reference.fa > human_reference.fa
 
 
 # haplotypic regions
-awk '/CHR_/{n=2}; n {n--; next}; 1' < human_reference.fa > human_reference_cl.fa
 
-#awk '/CHR_HSCHR/{n=2}; n {n--; next}; 1' < human_reference.fa > human_reference_cl.fa
-#grep -A1 'CHR_HSCHR' human_reference.fa> chr.sed
-#sed '/--/d' ./chr.sed> chrr.sed
-#rm chr.sed
-#grep -Fvx -f chrr.sed human_reference.fa >human_reference_cl.fa
+awk '/CHR_/{n=2}; n {n--; next}; 1' < human_reference.fa > human_reference_cl.fa
 
 
 # remove useless files
+
 rm isoform.sed
 rm reference.fa
 rm human_reference.fa
@@ -104,10 +102,8 @@ blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_human -e
 
 **4. Clean Blast results**
 
-In order to avoid finding overlapped genes, it is appropriate to exclude those genes whose position in chromosome is inside another gene's position.
-<br />
-So, we get those ids that are used in Blastp.
-<br />
+In order to avoid finding overlapped genes, it is appropriate to exclude those genes whose position in chromosome is inside another gene's position. <br />
+So, we get those ids that are used in Blastp. <br />
 
 ```
 cd $HOME/conserved_gene_order/reference_human
