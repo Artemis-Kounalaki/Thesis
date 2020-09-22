@@ -24,7 +24,7 @@ wget 'ftp://ftp.ensembl.org/pub/release-100/fasta/homo_sapiens/pep/Homo_sapiens.
 gunzip Homo_sapiens.GRCh38.pep.all.fa.gz
 
 ```
-<br />
+
 **2. This is the code for cleaning the fasta file of human protein sequences.**
 
 Find scaffold regions - unknown regions-, isoforms and haplotypic regions.
@@ -65,7 +65,6 @@ rm scaff.sed
 
 ```
 
-<br />
 **3. Install Blast**
 
 Install Blast and create a database with the reference sequences.
