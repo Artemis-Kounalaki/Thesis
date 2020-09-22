@@ -5,7 +5,7 @@ output: html_document
 ---
 
 <br />
-**Download the data.**
+**Download the data**
 
 In order to finding duplicated regions in human, protein sequences are downloaded from Ensembl db.
 <br />
