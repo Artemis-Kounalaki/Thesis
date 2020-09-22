@@ -1,14 +1,13 @@
 ---
 title: "Gene order conservation"
 author: "Artemis Kounalaki"
-output: html_document
 ---
 
-<br />
 **1. Download the data**
 
 In order to finding duplicated regions in human, protein sequences are downloaded from Ensembl db.
 <br />
+
 ```
 # Make a file for the whole process.
 
@@ -27,8 +26,8 @@ gunzip Homo_sapiens.GRCh38.pep.all.fa.gz
 
 **2. This is the code for cleaning the fasta file of human protein sequences.**
 
-Find scaffold regions - unknown regions-, isoforms and haplotypic regions.
-Make a file with these lines.
+Find scaffold regions - unknown regions-, isoforms and haplotypic regions. <br />
+Make a file with these lines. <br />
 Remove these lines from the inital file with human protein sequences.
 
 <br />
@@ -108,16 +107,16 @@ blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_human -e
 In order to avoid finding overlapped genes, it is appropriate to exclude those genes whose position in chromosome is inside another gene's position.
 <br />
 So, we get those ids that are used in Blastp.
+<br />
 
 ```
 cd $HOME/conserved_gene_order/reference_human
 grep '>' human_reference_cl.fa> ids.txt
 
 ```
-<br />
-
-#Create a list with those genes that are overlapped in pairs. The lists include: gene1&2  name, chrosmosome, start, end.
-#Python3 code is given.
+Create lists with those genes that are overlapped, in pairs. <br />
+The lists include: gene1&2  name, chrosmosome, start, end. <br />
+Python3 code is given. <br />
 
 ```
 import os
