@@ -5,7 +5,7 @@ output: html_document
 ---
 
 <br />
-**Download the data**
+**1. Download the data**
 
 In order to finding duplicated regions in human, protein sequences are downloaded from Ensembl db.
 <br />
@@ -32,6 +32,7 @@ Make a file with these lines.
 Remove these lines from the inital file with human protein sequences.
 
 <br />
+
 ```
 #scaffolds
 cd $HOME/conserved_gene_order/human_reference
@@ -63,11 +64,13 @@ rm human_reference.fa
 rm scaff.sed
 
 ```
+
 <br />
 **3. Install Blast**
 
 Install Blast and create a database with the reference sequences.
 <br />
+
 ```
 # Blast installation from ncbi
 
@@ -99,8 +102,6 @@ makeblastdb -in $HOME/conserved_gene_order/human_reference/human_reference_cl.fa
 
 blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_human -evalue 1e-10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_p 80 -query $HOME/conserved_gene_order/human_reference/human_reference.fa >'results_human.txt'
 
-
-
 ```
 
 **4. Clean Blast results**
@@ -108,6 +109,7 @@ blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_human -e
 In order to avoid finding overlapped genes, it is appropriate to exclude those genes whose position in chromosome is inside another gene's position.
 <br />
 So, we get those ids that are used in Blastp.
+
 ```
 cd $HOME/conserved_gene_order/reference_human
 grep '>' human_reference_cl.fa> ids.txt
