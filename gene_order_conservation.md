@@ -86,7 +86,7 @@ cd ..
 mkdir $HOME/conserved_gene_order/blast_db
 export BLASTDB=$HOME/conserved_gene_order/blast_db
 set BLASTDB=$HOME/conserved_gene_order/blast_db
-cd $HOME/conserved_gene_order/blast_db
+cd $HOME/conserved_gene_order/human_reference
 
 
 # Make the blast database.
@@ -106,7 +106,7 @@ In order to avoid finding overlapped genes, it is appropriate to exclude those g
 So, we get those ids that are used in Blastp. <br />
 
 ```
-cd $HOME/conserved_gene_order/reference_human
+cd $HOME/conserved_gene_order/human_reference
 grep '>' human_reference_cl.fa> ids.txt
 
 ```
@@ -127,7 +127,7 @@ with open("ids.txt") as f:
         myis.append([name,chromosome ,start, end])
 
 
-os.chdir("$HOME/conserved_gene_order/blast_db")
+os.chdir("$HOME/conserved_gene_order/human_reference")
 id1=[]
 id2=[]
 with open("results_human.txt") as file:
@@ -137,7 +137,6 @@ with open("results_human.txt") as file:
 pairs=list(zip(id1,id2))
 
 
-njobs=-1
 # in which list id is included
 overlapped_pairs=[]
 for pair in pairs:
