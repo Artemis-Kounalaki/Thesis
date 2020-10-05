@@ -28,7 +28,7 @@ gunzip Homo_sapiens.GRCh38.pep.all.fa.gz
 
 Find scaffold regions - unknown regions-, isoforms and haplotypic regions. <br />
 Make a file with these lines. <br />
-Remove these lines from the inital file with human protein sequences.
+Remove these lines from the initial file with human protein sequences.
 
 <br />
 
@@ -111,7 +111,7 @@ grep '>' human_reference_cl.fa> ids.txt
 
 ```
 Create lists with those genes that are overlapped, in pairs. <br />
-The lists include: gene1&2  name, chrosmosome, start, end. <br />
+The lists include: gene1&2  name, chromosome, start, end. <br />
 **Python3** code is given. <br />
 
 ```
@@ -162,7 +162,7 @@ with open("overlapped_ids.txt", "w") as output:
     output.write(str(overlapped_pairs))
 ```
 
-Now I have all trnascript ids with their location and the blast results.<br />
+Now I have all transcript ids with their location and the blast results.<br />
 It's time to clean the blast results from overlapped transcript pairs in **Python3**.<br />
 
 ```
@@ -217,13 +217,13 @@ for i in data:
 
 
 #Keep a dictionary with keys only appear
-#in dict2 and not in Dict1 (clean overalpped transcripts)
+#in dict2 and not in Dict1 (clean overlapped transcripts)
 
 keep={k:v for k,v in dict2.items() if k not in Dict1}
 unkeep=list(itertools.chain.from_iterable(keep.values()))
 
 
-#Make a txt file with the transormed blast results.
+#Make a txt file with the transformed blast results.
 with open("clean_blast_res.txt", 'w') as out:
     for item in unkeep:
         out.write(str(item)+'\n')
@@ -231,7 +231,7 @@ out.close()
 ```
 
 
-Now, remove brakets and symbols not needed in this txt file. - **bash** <br />
+It's time to remove the brackets and symbols not needed in this txt file. - **bash** <br />
 
 ```
 sed 's|[[],']||g' clean_blast_res.txt > clean_blast_results.txt
