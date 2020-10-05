@@ -112,7 +112,7 @@ grep '>' human_reference_cl.fa> ids.txt
 ```
 Create lists with those genes that are overlapped, in pairs. <br />
 The lists include: gene1&2  name, chrosmosome, start, end. <br />
-*Python3* code is given. <br />
+**Python3** code is given. <br />
 
 ```
 import os
@@ -163,7 +163,7 @@ with open("overlapped_ids.txt", "w") as output:
 ```
 
 Now I have all trnascript ids with their location and the blast results.<br />
-It's time to clean the blast results from overlapped transcript pairs in *Python3*.<br />
+It's time to clean the blast results from overlapped transcript pairs in **Python3**.<br />
 
 ```
 #Open overlapped ids in pairs.
@@ -231,7 +231,7 @@ out.close()
 ```
 
 
-Now, remove brakets and symbols not needed in this txt file. - *bash* <br />
+Now, remove brakets and symbols not needed in this txt file. - **bash** <br />
 
 ```
 sed 's|[[],']||g' clean_blast_res.txt > clean_blast_results.txt
