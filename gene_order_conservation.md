@@ -86,17 +86,18 @@ cd ..
 mkdir $HOME/conserved_gene_order/blast_db
 export BLASTDB=$HOME/conserved_gene_order/blast_db
 set BLASTDB=$HOME/conserved_gene_order/blast_db
-cd $HOME/conserved_gene_order/human_reference
 
 
 # Make the blast database.
 
-makeblastdb -in $HOME/conserved_gene_order/human_reference/human_reference_cl.fa -dbtype prot -out database_human
+cd $HOME/conserved_gene_order/blast_db
+makeblastdb -in $HOME/conserved_gene_order/human_reference/human_reference_cl.fa -dbtype prot -parse_seqids  -out database_human
 
 
 # Run blastp.
 
-blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_human -evalue 1e-10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_p 80 -query $HOME/conserved_gene_order/human_reference/human_reference.fa >'results_human.txt'
+cd $HOME/conserved_gene_order/human_reference 
+blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_human -evalue 1e-10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen"  -qcov_hsp_perc 80 -query $HOME/conserved_gene_order/human_reference/human_reference_cl.fa >'results_human.txt'
 
 ```
 
