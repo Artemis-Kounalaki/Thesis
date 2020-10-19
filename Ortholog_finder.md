@@ -3,8 +3,8 @@ title: "Gene order conservation-sequel- (1)"
 author: "Artemis Kounalaki"
 ---
 
-Now, its time to find ortholgs.<br />
-# 1st group: Homo sapiens - Macaca mulatta <br />
+**Now, its time to find ortholgs.** <br />
+## 1st group: Homo sapiens - Macaca mulatta <br />
 **1. Download macaca's protein whole genome sequences.**
 <br />
 
