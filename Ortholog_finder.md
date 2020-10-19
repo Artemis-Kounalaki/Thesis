@@ -15,6 +15,7 @@ cd $HOME/conserved_gene_order/macaca_reference
 wget 'ftp://ftp.ensembl.org/pub/release-100/fasta/macaca_mulatta/pep/Macaca_mulatta.Mmul_10.pep.all.fa.gz'
 gunzip Macaca_mulatta.Mmul_10.pep.all.fa.gz
 
+
 #make sequences in one line
 
 awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' < Macaca_mulatta.Mmul_10.pep.all.fa > macaca_reference.fa
