@@ -93,8 +93,13 @@ cd $HOME/conserved_gene_order/blast_db
 makeblastdb -in $HOME/conserved_gene_order/human_reference/human_reference_clean.fa -dbtype prot -parse_seqids  -out database_human
 
 
-# Run blastp.
+```
+**3. Run Blast and find human paralogs.**
 
+Run blastp.
+<br />
+
+```
 cd $HOME/conserved_gene_order/human_reference
 blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_human -evalue 1e-10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen"  -qcov_hsp_perc 80 -query $HOME/conserved_gene_order/human_reference/human_reference_clean.fa >'results_human.txt'
 
