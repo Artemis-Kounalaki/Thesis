@@ -26,39 +26,38 @@ gunzip Homo_sapiens.GRCh38.pep.all.fa.gz
 
 **2. This is the code for cleaning the fasta file of human protein sequences.**
 
+Make multiline sequences into one line sequence each. <br />
 Find scaffold regions - unknown regions-, isoforms and haplotypic regions. <br />
-Make a file with these lines. <br />
 Remove these lines from the initial file with human protein sequences.
-
 <br />
 
 ```
+#make sequences in one line
+
+awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' < Homo_sapiens.GRCh38.pep.all.fa > human_reference.fa
+
+
 #scaffolds
 
-cd $HOME/conserved_gene_order/human_reference
-grep -A 1 -w 'scaffold' Homo_sapiens.GRCh38.pep.all.fa> scaf.sed
-sed '/--/d' ./scaf.sed> scaff.sed
-rm scaf.sed
-grep -Fvx -f scaff.sed Homo_sapiens.GRCh38.pep.all.fa >reference.fa
+awk '/scaffold/{n=2}; n {n--; next}; 1' < human_reference.fa >
+human_reference_cl.fa
 
 
 # isoforms
 
-grep -A 1 -w 'isoform' reference.fa> isoform.sed
-grep -Fvx -f isoform.sed reference.fa > human_reference.fa
+awk '/isoform/{n=2}; n {n--; next}; 1' < human_reference_cl.fa > human_reference_cln.fa
 
 
 # haplotypic regions
 
-awk '/CHR_/{n=2}; n {n--; next}; 1' < human_reference.fa > human_reference_cl.fa
+awk '/CHR_/{n=2}; n {n--; next}; 1' < human_reference_cln.fa > human_reference_clean.fa
 
 
 # remove useless files
 
-rm isoform.sed
-rm reference.fa
 rm human_reference.fa
-rm scaff.sed
+rm human_reference_cl.fa
+rm human_reference_cln.fa
 
 ```
 
@@ -91,13 +90,13 @@ set BLASTDB=$HOME/conserved_gene_order/blast_db
 # Make the blast database.
 
 cd $HOME/conserved_gene_order/blast_db
-makeblastdb -in $HOME/conserved_gene_order/human_reference/human_reference_cl.fa -dbtype prot -parse_seqids  -out database_human
+makeblastdb -in $HOME/conserved_gene_order/human_reference/human_reference_clean.fa -dbtype prot -parse_seqids  -out database_human
 
 
 # Run blastp.
 
-cd $HOME/conserved_gene_order/human_reference 
-blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_human -evalue 1e-10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen"  -qcov_hsp_perc 80 -query $HOME/conserved_gene_order/human_reference/human_reference_cl.fa >'results_human.txt'
+cd $HOME/conserved_gene_order/human_reference
+blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_human -evalue 1e-10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen"  -qcov_hsp_perc 80 -query $HOME/conserved_gene_order/human_reference/human_reference_clean.fa >'results_human.txt'
 
 ```
 
@@ -108,7 +107,7 @@ So, we get those ids that are used in Blastp. <br />
 
 ```
 cd $HOME/conserved_gene_order/human_reference
-grep '>' human_reference_cl.fa> ids.txt
+grep '>' human_reference_clean.fa> ids.txt
 
 ```
 Create lists with those genes that are overlapped, in pairs. <br />
@@ -127,8 +126,7 @@ with open("ids.txt") as f:
         end = re.findall('GRCh38:+\w+:\d+:(\d+):',i)[0]
         myis.append([name,chromosome ,start, end])
 
-
-os.chdir("$HOME/conserved_gene_order/human_reference")
+os.chdir(os.path.expanduser('~/conserved_gene_order/human_reference'))
 id1=[]
 id2=[]
 with open("results_human.txt") as file:
@@ -174,7 +172,8 @@ import numpy as np
 import os
 import ast
 import itertools
-os.chdir("$HOME/conserved_gene_order/human_reference")
+
+os.chdir(os.path.expanduser("~/conserved_gene_order/human_reference"))
 
 with open("overlapped_ids.txt") as file:
     mylist = ast.literal_eval(file.read())
