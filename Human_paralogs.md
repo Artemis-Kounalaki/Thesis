@@ -166,8 +166,8 @@ with open("overlapped_ids.txt", "w") as output:
     output.write(str(overlapped_pairs))
 ```
 
-Now I have all transcript ids with their location and the blast results.<br />
-It's time to clean the blast results from overlapped transcript pairs in **Python3**.<br />
+Now I have all protein ids with their location and the blast results.<br />
+It's time to clean the blast results from overlapped protein pairs in **Python3**.<br />
 
 ```
 #Open overlapped ids in pairs.
@@ -208,13 +208,13 @@ data = np.loadtxt('results_human.txt', dtype=str)
 data2=np.sort(data[:,0:2],axis=1)
 
 
-#Merge the two transcript columns.
+#Merge the two protein columns.
 
 c=np.core.defchararray.add(data2[:,0],data2[:,1])
 data=np.column_stack((c,data))
 
 
-#Make a dictionary with keys be the sorted merged transcript names.
+#Make a dictionary with keys be the sorted merged protein names.
 
 dict2=defaultdict(list)
 for i in data:
@@ -222,7 +222,7 @@ for i in data:
 
 
 #Keep a dictionary with keys only appear
-#in dict2 and not in Dict1 (clean overlapped transcripts)
+#in dict2 and not in Dict1 (clean overlapped proteins)
 
 keep={k:v for k,v in dict2.items() if k not in Dict1}
 unkeep=list(itertools.chain.from_iterable(keep.values()))
@@ -239,5 +239,5 @@ out.close()
 It's time to remove the brackets and symbols not needed in this txt file. - **bash** <br />
 
 ```
-sed 's|[[],']||g' clean_blast_res.txt > clean_blast_results.txt
+tr -d "['],"< clean_blast_res.txt > clean_blast_results.txt
 ```
