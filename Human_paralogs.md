@@ -240,4 +240,5 @@ It's time to remove the brackets and symbols not needed in this txt file. - **ba
 
 ```
 tr -d "['],"< clean_blast_res.txt > clean_blast_results.txt
+
 ```
