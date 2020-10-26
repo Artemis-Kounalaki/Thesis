@@ -147,5 +147,6 @@ rm reciprocal_hum-mac.*.txt
 
 
 #  Make groups: human proteins that are similar with macaca's proteins.
+
 cd $HOME
 python3 protein_groups.py
