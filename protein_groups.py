@@ -15,7 +15,7 @@ for element in data2:
 new_Dic = {a:list(set(b)) for a, b in Diction.items()}
 
 
-# Make dictionary with human proteins and their homologs.
+# Make dictionary with human proteins and their paralogs.
 
 datahum=np.loadtxt('clean_blast_results.txt', dtype=str)
 
@@ -34,6 +34,6 @@ for k, v in chain(Dictionhum1.items(), Dictionhum2.items()):
 Diction_hum = {a:list(set(b)) for a, b in Dictionhum.items()}
 
 
-# Combine the two dictionaries : keys = human proteins values = 1) macaca proteins, 2) human homologs
+# Combine the two dictionaries : keys = human proteins values = 1) macaca proteins, 2) human paralogs
 
 d_comb = {key:[new_Dic[key], Diction_hum[key]] for key in new_Dic}
