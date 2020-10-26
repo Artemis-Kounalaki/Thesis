@@ -6,4 +6,5 @@ Their names: 'Human_paralogs.md' and 'Gene_order_finder.md'. <br/>
 **Run files.** <br/>
 script_all.sh : This bash file contains the code for the whole process (until now) with 'calls' to the others scripts.<br/>
 To run this locally: <br/>
-*Download* all files mentioned as script1 - overlapped_ids.py , clean_ovrl.py , reciprocal_mac-hum.py , protein_groups.py - AND the bash script named script_all.sh to *your Home directory*. <br/>
+*Download* all files mentioned as script1 - overlapped_ids.py , clean_ovrl.py , reciprocal_mac-hum.py , protein_groups.py - AND the bash script named script_all.sh .<br/>
+Copy the requested files to !!! *your Home directory*!!! . <br/>
