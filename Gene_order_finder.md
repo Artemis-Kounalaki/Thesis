@@ -201,4 +201,5 @@ Diction_hum = {a:list(set(b)) for a, b in Dictionhum.items()}
 # Combine the two dictionaries : keys = human proteins values = 1) macaca proteins, 2) human homologs
 
 d_comb = {key:[new_Dic[key], Diction_hum[key]] for key in new_Dic}
+
 ```
