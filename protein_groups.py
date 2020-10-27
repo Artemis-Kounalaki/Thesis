@@ -17,7 +17,7 @@ new_Dic = {a:list(set(b)) for a, b in Diction.items()}
 
 
 # Make dictionary with human proteins and their paralogs.
-
+os.chdir(os.path.expanduser('~/conserved_gene_order/human_reference'))
 datahum=np.loadtxt('clean_blast_results.txt', dtype=str)
 
 Dictionhum1 = defaultdict(list)
