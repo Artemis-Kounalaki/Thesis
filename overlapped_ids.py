@@ -24,7 +24,7 @@ pairs=list(zip(id1,id2))
 
 # in which list id is included
 
-overlapped_pairs=[]
+overlapped_pr=[]
 for pair in pairs:
     a= [i for i, el in enumerate(myis) if pair[0] in el][0]
     b= [i for i, el in enumerate(myis) if pair[1] in el][0]
@@ -41,7 +41,11 @@ for pair in pairs:
 
 
     if ch1==ch2 and ((st1>st2 and st1<end2) or (st2>st1 and st2<end1)):
-        overlapped_pairs.append([pair[0],pair[1]])
+        if (end1-st1)>(end2-st2):
+            overlapped_pr.append(pair[1])
+        elif (end2-st2)>(end1-st1):
+            overlapped_pr.append(pair[0])
 
+overlapped_pr=list(set(overlapped_pr))
 with open("overlapped_ids.txt", "w") as output:
-    output.write(str(overlapped_pairs))
+    output.write(str(overlapped_pr))

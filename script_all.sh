@@ -78,11 +78,7 @@ cd $HOME/conserved_gene_order/human_reference
 grep '>' human_reference_clean.fa> ids.txt
 cd $HOME
 python3 overlapped_ids.py
-python3 clean_ovrl.py
-
-cd $HOME/conserved_gene_order/human_reference
-tr -d "['],"< clean_blast_res.txt > clean_blast_results.txt
-rm clean_blast_res.txt
+python3 new_clean.py
 
 
 
