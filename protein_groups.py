@@ -38,29 +38,3 @@ Diction_hum = {a:list(set(b)) for a, b in Dictionhum.items()}
 # Combine the two dictionaries : keys = human proteins values = 1) macaca proteins, 2) human paralogs
 
 d_comb = {key:[new_Dic[key], Diction_hum[key]] for key in new_Dic}
-
-#Make lists with macaca homologs.
-
-macacalist=[]
-
-datamac=np.loadtxt('results_macaca.txt', dtype=str)
-dataM=datamac[:,0:2]
-
-DictionM = defaultdict(list)
-for element in dataM:
-    DictionM[element[1]].append(element[0])
-DictionMM = {a:list(set(b)) for a, b in DictionM.items()}
-
-for key, value in DictionMM.items():
-    temp = [key,', '.join(value)]
-    macacalist.append(list(set(temp)))
-
-#print(list(DictionMM.keys())[0:2])
-#print(list(DictionMM.values())[0:2])
-#print(macacalist[0:2])
-'''
-for key, value1, value2 in d_comb.items():
-    print(key,value1,value2)
-
-'''
-
