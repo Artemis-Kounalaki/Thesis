@@ -115,8 +115,9 @@ cd $HOME/conserved_gene_order/human_reference
 grep '>' human_reference_clean.fa> ids.txt
 
 ```
-Create lists with those genes that are overlapped, in pairs. <br />
+Check every pair of blast results if proteins are overlapped. <br />
 The lists include: gene1&2  name, chromosome, start, end. <br />
+Save in a list the smallest protein of every overlapping pair in order to retain only the biggest protein and not the isoforms. <br />
 **Python3** code is given. <br />
 
 ```
@@ -143,7 +144,7 @@ pairs=list(zip(id1,id2))
 
 # in which list id is included
 
-overlapped_pairs=[]
+overlapped_pr=[]
 for pair in pairs:
     a= [i for i, el in enumerate(myis) if pair[0] in el][0]
     b= [i for i, el in enumerate(myis) if pair[1] in el][0]
@@ -160,85 +161,43 @@ for pair in pairs:
 
 
     if ch1==ch2 and ((st1>st2 and st1<end2) or (st2>st1 and st2<end1)):
-        overlapped_pairs.append([pair[0],pair[1]])
+      if (end1-st1)>(end2-st2):
+        overlapped_pr.append(pair[1])
+      elif (end2-st2)>(end1-st1):
+        overlapped_pr.append(pair[0])
 
 with open("overlapped_ids.txt", "w") as output:
-    output.write(str(overlapped_pairs))
+    output.write(str(overlapped_pr))
 ```
 
 Now I have all protein ids with their location and the blast results.<br />
-It's time to clean the blast results from overlapped protein pairs in **Python3**.<br />
+It's time to clean the blast results from overlapped proteins (isoforms) in **Python3**.<br />
 
 ```
-#Open overlapped ids in pairs.
-
-from collections import defaultdict
-import numpy as np
-import os
 import ast
-import itertools
+import pandas as pd
+import os
 
-os.chdir(os.path.expanduser("~/conserved_gene_order/human_reference"))
+# Open the file with proteins having overlapped ids.
 
+os.chdir(os.path.expanduser('~/conserved_gene_order/human_reference'))
 with open("overlapped_ids.txt") as file:
-    mylist = ast.literal_eval(file.read())
-    gene_names=list(itertools.chain.from_iterable(mylist))
-one=gene_names[::2]
-two=gene_names[1::2]
+    gene_names = ast.literal_eval(file.read())
 
 
-#Make a new list with pairs sorted.
+# Open human blast results with pandas and delete those rows
+# that contain the overlapped proteins.
 
-new=[list(t) for t in zip(one, two)]
-new1=sorted(new)
-new1=list(itertools.chain.from_iterable(new))
-new=[x+y for x,y in zip(new1[0::2], new1[1::2])]
-
-
-#Make a dictionary with keys as pairs.
-
-Dict1=defaultdict(list)
-for row in new:
-    Dict1[row].append(0)
+data = pd.read_csv('results_human.txt', sep="\t", header=None)
+data=data[~data[0].isin(gene_names)]
+data=data[~data[1].isin(gene_names)]
+data.to_csv(r'~/conserved_gene_order/human_reference/clean_blast_results_human.txt', header=None, index=None, sep=' ', mode='a')
 
 
-#Read blast results - make numpy array sorted
+# HOW MANY UNIQUE IDS NOW REMAIN.
 
-data = np.loadtxt('results_human.txt', dtype=str)
-data2=np.sort(data[:,0:2],axis=1)
-
-
-#Merge the two protein columns.
-
-c=np.core.defchararray.add(data2[:,0],data2[:,1])
-data=np.column_stack((c,data))
-
-
-#Make a dictionary with keys be the sorted merged protein names.
-
-dict2=defaultdict(list)
-for i in data:
-    dict2[i[0]].append(list(i[1:]))
-
-
-#Keep a dictionary with keys only appear
-#in dict2 and not in Dict1 (clean overlapped proteins)
-
-keep={k:v for k,v in dict2.items() if k not in Dict1}
-unkeep=list(itertools.chain.from_iterable(keep.values()))
-
-
-#Make a txt file with the transformed blast results.
-with open("clean_blast_res.txt", 'w') as out:
-    for item in unkeep:
-        out.write(str(item)+'\n')
-out.close()
-```
-
-
-It's time to remove the brackets and symbols not needed in this txt file. - **bash** <br />
-
-```
-tr -d "['],"< clean_blast_res.txt > clean_blast_results.txt
+#column_values = data[[0, 1]].values.ravel()
+#unique_values =  pd.unique(column_values)
+#print(len(unique_values))
 
 ```
