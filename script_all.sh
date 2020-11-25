@@ -12,25 +12,21 @@ wget 'ftp://ftp.ensembl.org/pub/release-100/fasta/homo_sapiens/pep/Homo_sapiens.
 gunzip Homo_sapiens.GRCh38.pep.all.fa.gz
 
 
-#make sequences in one line
+# Make sequences in one line
 
 awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' < Homo_sapiens.GRCh38.pep.all.fa > human_reference.fa
-
 
 # scaffolds
 
 awk '/scaffold/{n=2}; n {n--; next}; 1' < human_reference.fa > human_reference_cl.fa
 
-
 # isoforms
 
 awk '/isoform/{n=2}; n {n--; next}; 1' < human_reference_cl.fa > human_reference_cln.fa
 
-
 # haplotypic regions
 
 awk '/CHR_/{n=2}; n {n--; next}; 1' < human_reference_cln.fa > human_reference_clean.fa
-
 
 # remove useless files
 
@@ -44,11 +40,11 @@ rm human_reference_cln.fa
 
 cd $HOME/conserved_gene_order
 #wget https://ftp.ncbi.nlm.nih.gov/blast/executables/LATEST/ncbi-blast-2.10.1+-x64-macosx.tar.gz
-wget https://ftp.ncbi.nlm.nih.gov/blast/executables/LATEST/ncbi-blast-2.10.1+-x64-linux.tar.gz
-tar -xvzf ncbi-blast-2.10.1+-x64-linux.tar.gz
+wget https://ftp.ncbi.nlm.nih.gov/blast/executables/LATEST/ncbi-blast-2.11.0+-x64-linux.tar.gz
+tar -xvzf ncbi-blast-2.11.0+-x64-linux.tar.gz
 #tar -xvzf ncbi-blast-2.10.1+-x64-macosx.tar.gz
-rm ncbi-blast-2.10.1+-x64-linux.tar.gz
-cd $HOME/conserved_gene_order/ncbi-blast-2.10.1+/bin
+rm ncbi-blast-2.11.0+-x64-linux.tar.gz
+cd $HOME/conserved_gene_order/ncbi-blast-2.11.0+/bin
 export PATH=$PATH:$pwd
 
 
@@ -77,8 +73,8 @@ cd $HOME/conserved_gene_order/human_reference
 
 grep '>' human_reference_clean.fa> ids.txt
 cd $HOME
-python3 overlapped_ids.py
-python3 new_clean.py
+python3 overlapped_ids_h.py
+python3 clean_ov_ids_h.py
 
 
 
@@ -91,13 +87,12 @@ cd $HOME/conserved_gene_order/macaca_reference
 wget 'ftp://ftp.ensembl.org/pub/release-100/fasta/macaca_mulatta/pep/Macaca_mulatta.Mmul_10.pep.all.fa.gz'
 gunzip Macaca_mulatta.Mmul_10.pep.all.fa.gz
 
-#make sequences in one line
+# Make sequences in one line
 awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' < Macaca_mulatta.Mmul_10.pep.all.fa > macaca_reference.fa
 
 # scaffolds
 
 awk '/scaffold/{n=2}; n {n--; next}; 1' < macaca_reference.fa > macaca_reference_cl.fa
-
 
 # isoforms
 
@@ -105,17 +100,21 @@ awk '/isoform/{n=2}; n {n--; next}; 1' < macaca_reference_cl.fa > macaca_referen
 
 # unkonown regions
 
-awk '/QNVO/{n=2}; n {n--; next}; 1' < macaca_reference_cln.fa > macaca_reference_clean.fa
+awk '/QNVO/{n=2}; n {n--; next}; 1' < macaca_reference_cln.fa > macaca_reference_clean1.fa
 
+# regions with L1 position
+
+awk '/Mmul_10:ML1/{n=2}; n {n--; next}; 1' < macaca_reference_clean1.fa > macaca_reference_clean.fa
 
 # remove useless files
 
 rm macaca_reference.fa
 rm macaca_reference_cl.fa
 rm macaca_reference_cln.fa
+rm macaca_reference_clean1.fa
 
+# Find ids
 
-#Find ids
 grep '>' macaca_reference_clean.fa> macaca_ids.txt
 
 # Make the blast database.
@@ -134,15 +133,28 @@ blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_macaca -
 
 blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_human -evalue 1e-10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 80 -query $HOME/conserved_gene_order/macaca_reference/macaca_reference_clean.fa >'results_macaca-human.txt'
 
+
+# Run blastp. Macaca-Macaca
+
+blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_macaca -evalue 1e-10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 80 -query $HOME/conserved_gene_order/macaca_reference/macaca_reference_clean.fa >'results_macaca.txt'
+
+
+# Clean macaca blast results from isoforms.
+
 cd $HOME
+python3 overlapped_ids_m.py
+python3 clean_ov_ids_m.py
+
+# Find reciprocal blast results
+
 python3 reciprocal_mac-hum.py
 cd $HOME/conserved_gene_order/macaca_reference
 cat reciprocal_hum-mac*.txt >> reciprocal_hum-mac_all.txt
 tr -d "['],"< reciprocal_hum-mac_all.txt > reciprocal_h-m.txt
-rm reciprocal_hum-mac.*.txt
-
+rm reciprocal_hum-mac*.txt
+cd $HOME
+python3 clean_ov_ids_h-m.py
 
 #  Make groups: human proteins that are similar with macaca's proteins.
 
-cd $HOME
 python3 protein_groups.py
