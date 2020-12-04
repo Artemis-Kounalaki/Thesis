@@ -43,9 +43,9 @@ def overlap(path,ids,org,blast_results,save_file):
 
         if ch1==ch2 and ((st1>st2 and st1<end2) or (st2>st1 and st2<end1)):
             if (end1-st1)>(end2-st2):
-                overlapped_pr.append(pair[0])
-            elif (end2-st2)>(end1-st1):
                 overlapped_pr.append(pair[1])
+            elif (end2-st2)>(end1-st1):
+                overlapped_pr.append(pair[0])
             #overlapped_pairs.append([pair[0],pair[1]])
 
     with open(save_file, "w") as output:
