@@ -119,7 +119,7 @@ cd $HOME
 Check every pair of blast results if proteins are overlapped. <br />
 The lists include: gene1&2  name, chromosome, start, end. <br />
 Save in a list the smallest protein of every overlapping pair in order to retain only the biggest protein and not the isoforms. <br />
-**Python3** code is given. _Overlapped_ids.py_ <br />
+**Python3** code is given. _overlapped_ids.py_ <br />
 
 ```
 import os
@@ -179,7 +179,7 @@ def overlap(path,ids,org,blast_results,save_file):
 ```
 
 Now I have all protein ids with their location and the blast results.<br />
-It's time to clean the blast results from overlapped proteins (isoforms) in **Python3**. _Clean_ov_ids.py_ <br />
+It's time to clean the blast results from overlapped proteins (isoforms) in **Python3**. _clean_ov_ids.py_ <br />
 
 ```
 import ast
@@ -209,5 +209,4 @@ def clean(path,ids,results,path_save):
         #column_values = data[[0, 1]].values.ravel()
         #unique_values =  pd.unique(column_values)
         #print(len(unique_values))
-
 ```
