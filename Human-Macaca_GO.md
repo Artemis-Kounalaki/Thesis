@@ -58,15 +58,18 @@ rm macaca_reference_clean1.fa
 ```
 
 
-**3. Extract protein ids and their location.**
+**3. Find overlapped ids and save them & clean reference genome from overlapped ids .**
 <br/>
 
 ```
-#Find ids
 grep '>' macaca_reference_clean.fa> macaca_ids.txt
+cd $HOME
+python3 ov_ids_new_m.py
+
+python3 clear_genome_ovrl_m.py
+sed -i '/^[[:blank:]]*$/d' ~/conserved_gene_order1/macaca_reference/macaca_reference_clean1.py
 
 ```
-
 
 **4. Make Blast database and run blast.**
 
@@ -82,29 +85,18 @@ cd $HOME/conserved_gene_order/macaca_reference
 
 # Run blastp. Human - Macaca
 
-blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_macaca -evalue 1e-10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 80 -query $HOME/conserved_gene_order/human_reference/human_reference_clean.fa >'results_human-macaca.txt'
+blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_macaca -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 50 -max_hsps 1 -max_target_seqs 1 -query $HOME/conserved_gene_order1/human_reference/human_reference_clean1.fa >'results_human-macaca.txt'
 
 
 # Run blastp. Macaca - Human
 
-blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_human -evalue 1e-10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 80 -query $HOME/conserved_gene_order/macaca_reference/macaca_reference_clean.fa >'results_macaca-human.txt'
+blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_human -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 50 -max_hsps 1 -max_target_seqs 1 -query $HOME/conserved_gene_order1/macaca_reference/macaca_reference_clean1.fa >'results_macaca-human.txt'
 
 
-# Run blastp. Macaca - Macaca
-
-blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_macaca -evalue 1e-10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 80 -query $HOME/conserved_gene_order/macaca_reference/macaca_reference_clean.fa >'results_macaca.txt'
-cd $HOME
 ```
 
 
-**5. Clean macaca blast results from isoforms.**
-Clean blast results from isoforms with the same code we used to clean human blast results in Human_paralogs.
- <br/>
- This implementation is python3 script. <br/>
- 1. Find the isoforms. _overlapped_ids.py_  <br/>
- 2. Clean the results from the isoforms.  _clean_ov_ids.py_ <br/>
-
-**6. Find reciprocal proteins(human-macaca & macaca-human).**
+**5. Find reciprocal proteins(human-macaca & macaca-human).**
 It's appropriate to exclude proteins that not match reciprocally. _reciprocal_mac-hum.py_ from _reciprocal.py_
 
 ```
@@ -174,39 +166,7 @@ rm reciprocal_hum-mac*.txt
 cd $HOME
 ```
 
-**7. Clean reciprocal results from human and macaca isoforms.**
-Clean from overlapped ids found in macaca and in human. <br/>
-_clean_ov_ids_h-mac.py_ from _clean_ov_ids_reci.py_ <br/>
-```
-import ast
-import pandas as pd
-import os
 
-def clean_reciprocal(path1, path2, overlapped1, overlapped2, reciporcal, path_save):
-
-    # Open the file with human proteins having overlapped ids- isoforms-.
-
-    os.chdir(os.path.expanduser(path1))
-
-    with open(overlapped1) as file:
-        gene_names = ast.literal_eval(file.read())
-
-    os.chdir(os.path.expanduser(path2))
-
-    with open(overlapped2) as file:
-        gene_names_mac = ast.literal_eval(file.read())
-
-    # Open human-macaca blast results with pandas and delete those rows
-    # that contain the overlapped proteins.
-
-    data = pd.read_csv(reciporcal, sep=" ", header=None)
-    data=data[~data[0].isin(gene_names)]
-    data=data[~data[1].isin(gene_names)]
-    data=data[~data[0].isin(gene_names_mac)]
-    data=data[~data[1].isin(gene_names_mac)]
-
-    data.to_csv(path_save, header=None, index=None, sep=' ')
-```
 
 **8. Find couples with conserved gene order.**<br/>
 It's time to find which couples of proteins (human_protein - macaca_protein) have conserved gene order and which are not and save them at two different files.<br/>

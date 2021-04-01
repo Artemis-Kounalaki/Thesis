@@ -29,8 +29,7 @@ gunzip Homo_sapiens.GRCh38.pep.all.fa.gz
 Make multiline sequences into one line sequence each. <br />
 Find scaffold regions - unknown regions-, isoforms and haplotypic regions. <br />
 Remove these lines from the initial file with human protein sequences.
-<br />
-
+<br /> Find the overlapped proteins (isoforms) that are not mentioned as such and clean the genome from those. <br />
 ```
 # Make sequences in one line
 
@@ -58,6 +57,20 @@ awk '/CHR_/{n=2}; n {n--; next}; 1' < human_reference_cln.fa > human_reference_c
 rm human_reference.fa
 rm human_reference_cl.fa
 rm human_reference_cln.fa
+
+
+# Find overlapped ids and save them
+
+grep '>' human_reference_clean.fa> ids.txt
+cd $HOME
+python3 ov_ids_new_h.py
+
+
+# Clean reference genome from overlapped ids
+
+python3 clear_genome_ovrl_h.py
+sed -i '/^[[:blank:]]*$/d' ~/conserved_gene_order1/human_reference/human_reference_clean1.fa
+
 
 ```
 
@@ -90,7 +103,7 @@ set BLASTDB=$HOME/conserved_gene_order/blast_db
 # Make the blast database.
 
 cd $HOME/conserved_gene_order/blast_db
-makeblastdb -in $HOME/conserved_gene_order/human_reference/human_reference_clean.fa -dbtype prot -parse_seqids  -out database_human
+makeblastdb -in $HOME/conserved_gene_order/human_reference/human_reference_clean1.fa -dbtype prot -parse_seqids  -out database_human
 
 
 ```
@@ -101,112 +114,6 @@ Run blastp.
 
 ```
 cd $HOME/conserved_gene_order/human_reference
-blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_human -evalue 1e-10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen"  -qcov_hsp_perc 80 -query $HOME/conserved_gene_order/human_reference/human_reference_clean.fa >'results_human.txt'
+blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_human -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 50 -query $HOME/conserved_gene_order1/human_reference/human_reference_clean1.fa >'results_human.txt'
 
-```
-
-**4. Clean Blast results**
-
-In order to avoid finding overlapped genes, it is appropriate to exclude those genes whose position in chromosome is inside another gene's position. <br />
-So, we get those ids that are used in Blastp. <br />
-
-```
-cd $HOME/conserved_gene_order/human_reference
-grep '>' human_reference_clean.fa> ids.txt
-cd $HOME
-
-```
-Check every pair of blast results if proteins are overlapped. <br />
-The lists include: gene1&2  name, chromosome, start, end. <br />
-Save in a list the smallest protein of every overlapping pair in order to retain only the biggest protein and not the isoforms. <br />
-**Python3** code is given. _overlapped_ids.py_ <br />
-
-```
-import os
-import re
-
-
-def overlap(path,ids,org,blast_results,save_file):
-    os.chdir(os.path.expanduser(path))
-    myis=[]
-    with open(ids) as f:
-        for i in f:
-            name = re.findall('>+(\w+.\d+)',i)[0]
-            chromosome = re.findall('%s:+(\w+):'% org,i)[0]
-            start = re.findall('%s:+\w+:(\d+):' % org,i)[0]
-            end = re.findall('%s:+\w+:\d+:(\d+):'% org,i)[0]
-            myis.append([name,chromosome ,start, end])
-
-
-    id1=[]
-    id2=[]
-    with open(blast_results) as file:
-        for line in file:
-            id1.append(line.split('\t')[0])
-            id2.append(line.split('\t')[1])
-    pairs=list(zip(id1,id2))
-
-
-    # in which list id is included
-
-    overlapped_pr=[]
-    for pair in pairs:
-        a= [i for i, el in enumerate(myis) if pair[0] in el][0]
-        b= [i for i, el in enumerate(myis) if pair[1] in el][0]
-
-        ch1=myis[a][1]
-        st1=int(myis[a][2])
-        end1=int(myis[a][3])
-        range1=range(st1,end1)
-
-        ch2=myis[b][1]
-        st2=int(myis[b][2])
-        end2=int(myis[b][3])
-        range2=range(st2,end2)
-
-
-        if ch1==ch2 and ((st1>st2 and st1<end2) or (st2>st1 and st2<end1)):
-            if (end1-st1)>(end2-st2):
-                overlapped_pr.append(pair[0])
-            elif (end2-st2)>(end1-st1):
-                overlapped_pr.append(pair[1])
-            #overlapped_pairs.append([pair[0],pair[1]])
-
-    with open(save_file, "w") as output:
-        output.write(str(overlapped_pr))
-
-
-```
-
-Now I have all protein ids with their location and the blast results.<br />
-It's time to clean the blast results from overlapped proteins (isoforms) in **Python3**. _clean_ov_ids.py_ <br />
-
-```
-import ast
-import pandas as pd
-import os
-
-def clean(path,ids,results,path_save):
-
-        # Open the file with proteins having overlapped ids.
-
-        os.chdir(os.path.expanduser(path))
-        with open(ids) as file:
-            gene_names = ast.literal_eval(file.read())
-
-
-        # Open human blast results with pandas and delete those rows
-        # that contain the overlapped proteins.
-
-        data = pd.read_csv(results, sep="\t", header=None)
-        data=data[~data[0].isin(gene_names)]
-        data=data[~data[1].isin(gene_names)]
-        data.to_csv(path_save, header=None, index=None, sep=' ', mode='a')
-
-
-        # HOW MANY UNIQUE IDS NOW REMAIN.
-
-        #column_values = data[[0, 1]].values.ravel()
-        #unique_values =  pd.unique(column_values)
-        #print(len(unique_values))
 ```
