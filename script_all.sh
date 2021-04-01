@@ -229,36 +229,26 @@ rm reciprocal_hum-mus*.txt
 cd $HOME
 python3 order2.py
 
+cd $HOME/conserved_gene_order1/mus_reference
+
+# Run blastp. Mus - Macaca
+
+blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_mus -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 50 -max_hsps 1 -max_target_seqs 1 -query $HOME/conserved_gene_order1/macaca_reference/macaca_reference_clean1.fa > 'results_mus-macaca.txt'
 
 
+# Run blastp. Macaca - Mus
 
+blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_macaca -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 50 -max_hsps 1 -max_target_seqs 1 -query $HOME/conserved_gene_order1/mus_reference/mus_reference_clean1.fa >'results_macaca-mus.txt'
 
-
-
-# Run blastp. Mus musculus - Human
-
-blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_human -evalue 1e-10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qc$
-
-# Run bastp. Human - Mus musculus
-
-blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_mus -evalue 1e-10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov$
-
-# Run blastp. Mus - Mus
-
-blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_mus -evalue 1e-10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov$
-
-cd $HOME
-python3 overlapped_ids_mus.py
-python3 clean_ov_ids_mus.py
 
 
 # Find reciprocal blast results
 
-python3 reciprocal_mus-hum.py
-cd $HOME/conserved_gene_order/mus_reference
-cat reciprocal_hum-mus*.txt >> reciprocal_hum-mus_all.txt
-tr -d "['],"< reciprocal_hum-mus_all.txt > reciprocal_h-mus.txt
-rm reciprocal_hum-mus*.txt
 cd $HOME
-python3 clean_ov_ids_h-mus.py
-python3 order2.py
+python3 reciprocal_mac-mus.py
+cd $HOME/conserved_gene_order1/mus_reference
+cat reciprocal_mus-mac*.txt >> reciprocal_mus-mac_all.txt
+tr -d "['],"< reciprocal_mus-mac_all.txt > reciprocal_mus-m.txt
+rm reciprocal_mus-mac*.txt
+cd $HOME
+python3 order3.py
