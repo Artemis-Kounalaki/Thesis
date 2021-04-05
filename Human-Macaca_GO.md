@@ -378,7 +378,7 @@ df_nCGO.to_csv('~/conserved_gene_order/macaca_reference/nCGO.txt', header=None, 
 
 ```
 **9. Create a table with CGOs and nCGOs and their average percentage idenity in sequence level.**<br/>
-Implementation code: **Python3** _identity_per.py_ <br/>
+Implementation code: **Python3** _CGO_res.py_ <br/>
 ```
 import pandas as pd
 import numpy as np
