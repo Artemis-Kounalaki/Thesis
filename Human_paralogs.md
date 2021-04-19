@@ -58,10 +58,12 @@ rm human_reference.fa
 rm human_reference_cl.fa
 rm human_reference_cln.fa
 
+#! Demo step
+head - 5000 human_reference_clean > human_reference_cleann
 
 # Find overlapped ids and save them
 
-grep '>' human_reference_clean.fa> ids.txt
+grep '>' human_reference_cleann.fa> ids.txt
 cd $HOME
 python3 ov_ids_new_h.py
 
