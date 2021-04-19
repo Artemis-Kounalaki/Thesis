@@ -35,6 +35,10 @@ awk '/isoform/{n=2}; n {n--; next}; 1' < mus_reference_cl.fa > mus_reference_cle
 
 rm mus_reference.fa
 rm mus_reference_cl.fa
+
+#! Demo step
+head - 5000 mus_reference_clean > mus_reference_cleann
+
 ```
 
 **3. Extract protein ids and their location.**
@@ -42,7 +46,7 @@ rm mus_reference_cl.fa
 ```
 # Find ids
 
-grep '>' mus_reference_clean.fa> mus_ids.txt
+grep '>' mus_reference_cleann.fa> mus_ids.txt
 ```
 **4. Make Blast database and run blast.**
 
