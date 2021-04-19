@@ -1,3 +1,6 @@
+# Install libraries
+sudo apt-get install python3-pandas
+
 ## Make a file for the whole process.
 
 mkdir $HOME/conserved_gene_order1
@@ -35,7 +38,7 @@ rm human_reference_cl.fa
 rm human_reference_cln.fa
 
 #! Demo step
-head - 5000 human_reference_clean > human_reference_cleann
+head -5000 human_reference_clean.fa > human_reference_cleann.fa
 
 # Find overlapped ids and save them
 
@@ -118,7 +121,7 @@ rm macaca_reference_cln.fa
 rm macaca_reference_clean1.fa
 
 #! Demo step
-head - 5000 macaca_reference_clean > macaca_reference_cleann
+head -5000 macaca_reference_clean.fa > macaca_reference_cleann.fa
 
 # Find overlapped ids and save them
 
@@ -186,7 +189,7 @@ rm mus_reference.fa
 rm mus_reference_cl.fa
 
 #! Demo step
-head - 5000 mus_reference_clean > mus_reference_cleann
+head -5000 mus_reference_clean.fa > mus_reference_cleann.fa
 
 # Find overlapped ids and save them
 
