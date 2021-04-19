@@ -55,6 +55,9 @@ rm macaca_reference_cl.fa
 rm macaca_reference_cln.fa
 rm macaca_reference_clean1.fa
 
+#! Demo step
+head - 5000 human_reference_clean > human_reference_cleann
+
 ```
 
 
@@ -62,7 +65,7 @@ rm macaca_reference_clean1.fa
 <br/>
 
 ```
-grep '>' macaca_reference_clean.fa> macaca_ids.txt
+grep '>' macaca_reference_cleann.fa> macaca_ids.txt
 cd $HOME
 python3 ov_ids_new_m.py
 
