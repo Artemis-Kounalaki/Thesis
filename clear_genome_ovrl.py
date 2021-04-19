@@ -1,6 +1,7 @@
 import ast
 import os
 
+
 def clear_genome(path,reference,overlapped,save):
     os.chdir(os.path.expanduser(path))
     with open(reference) as f:
