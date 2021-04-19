@@ -28,14 +28,14 @@ awk '/isoform/{n=2}; n {n--; next}; 1' < human_reference_cl.fa > human_reference
 
 awk '/CHR_/{n=2}; n {n--; next}; 1' < human_reference_cln.fa > human_reference_clean.fa
 
-#! Demo step
-head - 5000 human_reference_clean > human_reference_cleann
-
 # remove useless files
 
 rm human_reference.fa
 rm human_reference_cl.fa
 rm human_reference_cln.fa
+
+#! Demo step
+head - 5000 human_reference_clean > human_reference_cleann
 
 # Find overlapped ids and save them
 
