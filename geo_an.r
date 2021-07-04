@@ -75,34 +75,3 @@ names(v2)=NULL
 write.table(v1, file = "target_cgo.txt", row.names =FALSE, col.names = FALSE )
 write.table(v2, file = "target_ncgo.txt", row.names =FALSE, col.names = FALSE )
 write.table(new_m, file="data_expr.txt", row.names=TRUE, col.names=TRUE)
-
-new_m=new_m[!duplicated(new_m[,1]),]
-new_m1=new_m[new_m[,1] %in% v1,]
-new_m2=new_m[new_m[,1] %in% v2,]
-dim(new_m1)
-rownames(new_m1)=c(new_m1[,1])
-rownames(new_m2)=c(new_m2[,1])
-new_m1=new_m1[,2:37]
-new_m2=new_m2[1:267,2:37]
-new_m1=`class<-`(new_m1, 'numeric')
-new_m2=`class<-`(new_m2, 'numeric')
-res <- t.test(new_m1, new_m2, paired = TRUE)
-res
-res$p.value
-res$estimate
-res$conf.int
-
-mat <- cbind(v1, v2)
-#write.csv(mat, file = "mat.csv")
-BiocManager::install("reshape2")
-library(reshape2)
-library(ggplot2)
-hist(new_m1[,1])
-hist(new_m2[,1])
-
-dotchart(new_m1[,1],labels=row.names(mtcars),cex=.7,
-         main="Gas Milage for Car Models",
-         xlab="Miles Per Gallon")
-dotchart(new_m2[,1],labels=row.names(mtcars),cex=.7,
-         main="Gas Milage for Car Models",
-         xlab="Miles Per Gallon")
