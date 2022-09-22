@@ -63,8 +63,8 @@ def ov_ids(path,org,all_ids,overl_file,clean_file):
 
 
     df_over=df_names[~df_names.ID.isin(df_ids.ID)]
-    print(len(df_names))
-    print(len(df_over))
+    #print(len(df_names))
+    #print(len(df_over))
 
     overl=df_over.ID.tolist()
     with open(overl_file, "w") as output:
@@ -73,4 +73,4 @@ def ov_ids(path,org,all_ids,overl_file,clean_file):
     df_ids.to_csv(clean_file, sep='\t')
     column_values = df_ids.ID.values.ravel()
     unique_values =  pd.unique(column_values)
-    print(len(unique_values))
+    #print(len(unique_values))
