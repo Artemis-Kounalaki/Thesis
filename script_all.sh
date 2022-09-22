@@ -1,7 +1,4 @@
-# Install libraries
-sudo apt-get install python3-pandas
-
-## Make a file for the whole process.
+# Make a file for the whole process.
 
 mkdir $HOME/conserved_gene_order1
 cd $HOME/conserved_gene_order1
@@ -29,20 +26,22 @@ awk '/isoform/{n=2}; n {n--; next}; 1' < human_reference_cl.fa > human_reference
 
 # haplotypic regions
 
-awk '/CHR_/{n=2}; n {n--; next}; 1' < human_reference_cln.fa > human_reference_clean.fa
+awk '/CHR_/{n=2}; n {n--; next}; 1' < human_reference_cln.fa > human_reference_cleann.fa
+
+# MT chromosome
+
+awk '/GRCh38:MT/{n=2}; n {n--; next}; 1' < human_reference_cleann.fa > human_reference_clean.fa
 
 # remove useless files
 
 rm human_reference.fa
 rm human_reference_cl.fa
 rm human_reference_cln.fa
-
-#! Demo step
-head -5000 human_reference_clean.fa > human_reference_cleann.fa
+rm human_reference_cleann.fa
 
 # Find overlapped ids and save them
 
-grep '>' human_reference_cleann.fa> ids.txt
+grep '>' human_reference_clean.fa> ids.txt
 cd $HOME
 python3 ov_ids_new_h.py
 
@@ -87,6 +86,8 @@ cd $HOME/conserved_gene_order1/human_reference
 
 
 
+
+
 # Now, its time to find ortholgs. 1st group: H.sapiens-macaque
 
 mkdir $HOME/conserved_gene_order1/macaca_reference
@@ -120,12 +121,9 @@ rm macaca_reference_cl.fa
 rm macaca_reference_cln.fa
 rm macaca_reference_clean1.fa
 
-#! Demo step
-head -5000 macaca_reference_clean.fa > macaca_reference_cleann.fa
-
 # Find overlapped ids and save them
 
-grep '>' macaca_reference_cleann.fa> macaca_ids.txt
+grep '>' macaca_reference_clean.fa> macaca_ids.txt
 cd $HOME
 python3 ov_ids_new_m.py
 
@@ -151,6 +149,11 @@ blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_macaca 
 blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_human -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 50 -max_hsps 1 -max_target_seqs 1 -query $HOME/conserved_gene_order1/macaca_reference/macaca_reference_clean1.fa >'results_macaca-human.txt'
 
 
+# Run blastp. Macaca-Macaca
+
+blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_macaca -evalue 1e-10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 80 -query $HOME/conserved_gene_order/macaca_reference/macaca_reference_clean.fa >'results_macaca.txt'
+
+
 # Find reciprocal blast results
 
 cd $HOME
@@ -161,8 +164,8 @@ tr -d "['],"< reciprocal_hum-mac_all.txt > reciprocal_h-m.txt
 rm reciprocal_hum-mac*.txt
 cd $HOME
 python3 order1.py
-cd $HOME
-python3 CGO_res_h-m.py
+cd $HOME/conserved_gene_order1/macaca_reference
+python3 CGO_res.py
 
 # 2st group: H.sapiens- Mus musculus
 
@@ -188,12 +191,9 @@ awk '/isoform/{n=2}; n {n--; next}; 1' < mus_reference_cl.fa > mus_reference_cle
 rm mus_reference.fa
 rm mus_reference_cl.fa
 
-#! Demo step
-head -5000 mus_reference_clean.fa > mus_reference_cleann.fa
-
 # Find overlapped ids and save them
 
-grep '>' mus_reference_cleann.fa> mus_ids.txt
+grep '>' mus_reference_clean.fa> mus_ids.txt
 cd $HOME
 python3 ov_ids_new_mus.py
 
@@ -218,6 +218,10 @@ blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_human -
 
 blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_mus -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen"  -qcov_hsp_perc 50 -max_hsps 1 -max_target_seqs 1 -query $HOME/conserved_gene_order1/human_reference/human_reference_clean1.fa >'results_human-mus.txt'
 
+# Run blastp. Mus - Mus
+
+#blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_mus -evalue 1e-10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 80 -max_hsps 1 -max_target_seqs 1 -query $HOME/conserved_gene_order/mus_reference/mus_reference_clean.fa >'results_mus.txt'
+
 
 # Find reciprocal blast results
 
@@ -228,20 +232,20 @@ cat reciprocal_hum-mus*.txt >> reciprocal_hum-mus_all.txt
 tr -d "['],"< reciprocal_hum-mus_all.txt > reciprocal_h-mus.txt
 rm reciprocal_hum-mus*.txt
 cd $HOME
-python3 order_h-mus.py
+python3 order2.py
 
-# 3d group Mus-Macaca
+# 3d Group : Mus- Macaca
 
 cd $HOME/conserved_gene_order1/mus_reference
 
 # Run blastp. Mus - Macaca
 
-blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_mus -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 50 -max_hsps 1 -max_target_seqs 1 -query $HOME/conserved_gene_order1/macaca_reference/macaca_reference_clean1.fa > 'results_mus-macaca.txt'
+blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_mus -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_$
 
 
 # Run blastp. Macaca - Mus
 
-blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_macaca -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 50 -max_hsps 1 -max_target_seqs 1 -query $HOME/conserved_gene_order1/mus_reference/mus_reference_clean1.fa >'results_macaca-mus.txt'
+blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_macaca -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qc$
 
 
 # Find reciprocal blast results
@@ -253,5 +257,4 @@ cat reciprocal_mus-mac*.txt >> reciprocal_mus-mac_all.txt
 tr -d "['],"< reciprocal_mus-mac_all.txt > reciprocal_mus-m.txt
 rm reciprocal_mus-mac*.txt
 cd $HOME
-python3 order_mus-mac.py
-python3 CGO_res_m-m.py
+python3 order3.py

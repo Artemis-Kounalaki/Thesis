@@ -14,22 +14,32 @@ print('Loading human paralogs ...')
 
 #os.chdir(os.path.expanduser(path_results_paralogs))
 df_paralogs = pd.read_csv('results_human.txt', sep='\t', header=None)
-df_paralogs.columns=['qseqid', 'sseqid', 'pident', 'length', 'mismatch', 'gapopen', 'qstart', 'qend', 'sstart', 'send', 'evalue', 'bitscore', 'slen', 'qlen']
+df_paralogs.columns = ['qseqid', 'sseqid', 'pident', 'length', 'mismatch', 'gapopen',
+                       'qstart', 'qend', 'sstart', 'send', 'evalue', 'bitscore', 'slen', 'qlen']
 df_paralogs.qseqid = df_paralogs.qseqid .astype(str)
 df_paralogs.sseqid = df_paralogs.sseqid .astype(str)
-df_del = df_paralogs[df_paralogs.qseqid == df_paralogs.sseqid] # delete the hit of a protein with itself
-df_paralogs=df_paralogs[~df_paralogs.isin(df_del)]
+
+
+# Delete the hit of a protein with itself
+
+df_del = df_paralogs[df_paralogs.qseqid == df_paralogs.sseqid]
+df_paralogs = df_paralogs[~df_paralogs.isin(df_del)]
 df_paralogs = df_paralogs.dropna(how='all')
 df_paralogs = df_paralogs.reset_index(drop=True)
-df_paralogs["pairs"] = df_paralogs.apply(lambda row: ''.join(sorted([row["qseqid"], row["sseqid"]])), axis = 1)
+df_paralogs["pairs"] = df_paralogs.apply(lambda row: ''.join(sorted([row["qseqid"], row["sseqid"]])), axis=1)
+
+
 only_pairs = df_paralogs[df_paralogs["pairs"].duplicated(keep = False)].sort_values(by = "pairs") # find reciprocallity
+keep=list(set(only_pairs['qseqid']).intersection(set(only_pairs['sseqid']))) #prevent false pairs ,alphabetically sort pairs
+only_pairs=only_pairs[only_pairs['qseqid'].isin(keep) & only_pairs['sseqid'].isin(keep)]
 only_pairs = only_pairs.reset_index(drop=True)
+par = pd.unique(only_pairs[['qseqid', 'sseqid']].values.ravel())
 
 
 # Statistic paralog conserved and paralog non conserved
 
 # Loading results al.txt
-df_all = pd.read_csv('al.txt', sep='\t')
+df_all = pd.read_csv('CGO_nCGO_h-mus_my.txt', sep='\t')
 df_all.columns=['qseqid', 'sseqid', 'pident', 'length', 'mismatch', 'gapopen', 'qstart', 'qend', 'sstart', 'send', 'evalue', 'bitscore', 'slen', 'qlen', 'Conserved']
 genes=df_all[['qseqid','sseqid']].values.ravel()
 par= pd.unique(only_pairs[['qseqid','sseqid']].values.ravel())
@@ -72,7 +82,8 @@ print('The number of non conserved genes without paralogs is:',len(ncons1))
 df_human = pd.read_csv('clean_ids_human.txt', sep='\t', index_col=0)
 df_human = df_human[df_human.Chrom !='MT']
 
-
+CGO=df_human[df_human.ID.isin(cons.qseqid)]
+nCGO=df_human[df_human.ID.isin(ncons.qseqid)]
 CGO_Par = df_human[df_human.ID.isin(cons.qseqid[cons.qseqid.isin(par)])]
 nCGO_Par = df_human[df_human.ID.isin(ncons.qseqid[ncons.qseqid.isin(par)])]
 nCGO_nPar= df_human[df_human.ID.isin(ncons.qseqid[~ncons.qseqid.isin(par)])]
@@ -106,7 +117,6 @@ for i in c:
         df_c_n.loc[count,'CGO']= df_par['sseqid'].iloc[i]
         df_c_n.loc[count,'nCGO']= df_par['qseqid'].iloc[i]
 
-print(df_c_n)
 df_c_n.to_csv('/Users/artemiskounalake/cgo_ncgo_par.txt', header=None, index=None, sep=' ', mode='a')
 
 # end here
@@ -135,8 +145,6 @@ def Chrom(lis):
     lis_c.append(len(lis[lis['Chrom']=='Y']))
     return lis_c
 
-Chrom(CGO_Par)
-print(len_chr_g)
 
 
 #pd.pivot_table(chr1, index='A', columns='Chrom', values='B').plot(kind='bar')
@@ -158,7 +166,12 @@ def plot_list(len_chr,name):
         ax.text(v +0.15, i - .1, str(round(v,2)), color='indianred', fontweight='bold')
     fig.set_size_inches(10.5, 6.5, forward=True)
 
+
+plot_list(Chrom(CGO),'CGOs in Chromosome Level')
+plot_list(Chrom(nCGO),'nCGOs in Chromosome Level')
 plot_list(Chrom(CGO_Par),'CGOs with Paralog in Chromosome Level')
 plot_list(Chrom(nCGO_Par),'Non-CGO with Paralog in Chromosome Level')
 plot_list(Chrom(nCGO_nPar),'Non-CGO with no Paralog in Chromosome Level')
 plot_list(Chrom(CGO_nPar),'CGOs with no Paralog in Chromosome Level')
+
+

@@ -5,7 +5,7 @@ import os
 def ov_ids(path,org,all_ids,overl_file,clean_file):
 
     # Make a table with all existing ids from reference genome
-    
+
     os.chdir(os.path.expanduser(path))
     counter=-1
     df_ids = pd.DataFrame(columns=['ID'])
@@ -35,7 +35,7 @@ def ov_ids(path,org,all_ids,overl_file,clean_file):
     len_new = 0
     length = [len_old, len_new]
     while True:
-        print('round')
+        #print('round')
         for ind in range(0,len(df_ids)):
             if ind < len(df_ids):
                 lis = df_ids.index[(df_ids.loc[ind,'Chrom'] == df_ids['Chrom']) & (df_ids.loc[ind, 'Start'] >= df_ids['Start']) & (df_ids['End'] >= df_ids.loc[ind, 'Start'])].tolist()
