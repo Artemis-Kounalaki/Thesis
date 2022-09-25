@@ -114,12 +114,18 @@ awk '/QNVO/{n=2}; n {n--; next}; 1' < macaca_reference_cln.fa > macaca_reference
 
 awk '/Mmul_10:ML1/{n=2}; n {n--; next}; 1' < macaca_reference_clean1.fa > macaca_reference_clean.fa
 
+# MT chromosome
+
+awk '/Mmul_10:MT/{n=2}; n {n--; next}; 1' < macaca_reference_cleann.fa > macaca_reference_clean.fa
+
 # remove useless files
 
 rm macaca_reference.fa
 rm macaca_reference_cl.fa
 rm macaca_reference_cln.fa
 rm macaca_reference_clean1.fa
+rm macaca_reference_cleann.fa
+
 
 # Find overlapped ids and save them
 
@@ -141,17 +147,17 @@ cd $HOME/conserved_gene_order1/macaca_reference
 
 # Run blastp. Human - Macaca
 
-blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_macaca -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 50 -max_hsps 1 -max_target_seqs 1 -query $HOME/conserved_gene_order1/human_reference/human_reference_clean1.fa >'results_human-macaca.txt'
+blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_macaca -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 50 -max_hsps 1 -query $HOME/conserved_gene_order1/human_reference/human_reference_clean1.fa >'results_human-macaca.txt'
 
 
 # Run blastp. Macaca - Human
 
-blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_human -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 50 -max_hsps 1 -max_target_seqs 1 -query $HOME/conserved_gene_order1/macaca_reference/macaca_reference_clean1.fa >'results_macaca-human.txt'
+blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_human -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 50 -max_hsps 1 -query $HOME/conserved_gene_order1/macaca_reference/macaca_reference_clean1.fa >'results_macaca-human.txt'
 
 
 # Run blastp. Macaca-Macaca
 
-blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_macaca -evalue 1e-10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 80 -query $HOME/conserved_gene_order/macaca_reference/macaca_reference_clean.fa >'results_macaca.txt'
+#blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_macaca -evalue 1e-10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 80 -query $HOME/conserved_gene_order/macaca_reference/macaca_reference_clean.fa >'results_macaca.txt'
 
 
 # Find reciprocal blast results
@@ -163,6 +169,9 @@ cat reciprocal_hum-mac*.txt >> reciprocal_hum-mac_all.txt
 tr -d "['],"< reciprocal_hum-mac_all.txt > reciprocal_h-m.txt
 rm reciprocal_hum-mac*.txt
 cd $HOME
+python3 mybl_1.py
+cd $HOME
+# ena stop edw
 python3 order1.py
 cd $HOME/conserved_gene_order1/macaca_reference
 python3 CGO_res.py
