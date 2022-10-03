@@ -34,7 +34,7 @@ def my_blast(path,org,file_name):
 
     metrics=pd.merge(d1, d2,   on="pairs")
     metrics['qseqid'] = metrics['pairs'].str.split(' ').str[1]
-    metrics=metrics.sort_values(['qseqid','bitscore'], ascending=[True,False])
+    metrics=metrics.sort_values(['qseqid','bitscore','pident'], ascending=[True,False,False])
     #print(metrics)
 
 
