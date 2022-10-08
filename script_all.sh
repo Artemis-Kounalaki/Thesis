@@ -165,7 +165,6 @@ rm reciprocal_hum-mac*.txt
 cd $HOME
 python3 mybl_1.py
 cd $HOME
-# ena stop edw
 python3 order_hum-mac.py
 cd $HOME/conserved_gene_order1/macaca_reference
 python3 CGO_res_h-m.py
@@ -251,20 +250,20 @@ python3 CGO_res_h-mus.py
 
 
 
-
+#EDW stop
 
 # 3d Group : Mus- Macaca
 
 cd $HOME/conserved_gene_order1/mus_reference
 
+# Run blastp.  Macaca - Mus
+
+blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_mus -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 50 -max_hsps 1 -query $HOME/conserved_gene_order1/macaca_reference/macaca_reference_clean1.fa >'results_macaca-mus.txt'
+
+
 # Run blastp. Mus - Macaca
 
-blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_mus -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_$
-
-
-# Run blastp. Macaca - Mus
-
-blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_macaca -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qc$
+blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_macaca -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 50 -max_hsps 1 -query $HOME/conserved_gene_order1/mus_reference/mus_reference_clean1.fa >'results_mus-macaca.txt'
 
 
 # Find reciprocal blast results
