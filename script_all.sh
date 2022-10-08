@@ -149,15 +149,9 @@ cd $HOME/conserved_gene_order1/macaca_reference
 
 blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_macaca -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 50 -max_hsps 1 -query $HOME/conserved_gene_order1/human_reference/human_reference_clean1.fa >'results_human-macaca.txt'
 
-
 # Run blastp. Macaca - Human
 
 blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_human -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 50 -max_hsps 1 -query $HOME/conserved_gene_order1/macaca_reference/macaca_reference_clean1.fa >'results_macaca-human.txt'
-
-
-# Run blastp. Macaca-Macaca
-
-#blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_macaca -evalue 1e-10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 80 -query $HOME/conserved_gene_order/macaca_reference/macaca_reference_clean.fa >'results_macaca.txt'
 
 
 # Find reciprocal blast results
@@ -172,9 +166,14 @@ cd $HOME
 python3 mybl_1.py
 cd $HOME
 # ena stop edw
-python3 order1.py
+python3 order_hum-mac.py
 cd $HOME/conserved_gene_order1/macaca_reference
-python3 CGO_res.py
+python3 CGO_res_h-m.py
+
+
+
+
+
 
 # 2st group: H.sapiens- Mus musculus
 
@@ -193,12 +192,17 @@ awk '/scaffold/{n=2}; n {n--; next}; 1' < mus_reference.fa > mus_reference_cl.fa
 
 # isoforms
 
-awk '/isoform/{n=2}; n {n--; next}; 1' < mus_reference_cl.fa > mus_reference_clean.fa
+awk '/isoform/{n=2}; n {n--; next}; 1' < mus_reference_cl.fa > mus_reference_clean1.fa
+
+# MT chromosome
+
+awk '/GRCm38:MT/{n=2}; n {n--; next}; 1' < mus_reference_clean1.fa > mus_reference_clean.fa
 
 # Remove useless files
 
 rm mus_reference.fa
 rm mus_reference_cl.fa
+rm mus_reference_clean1.fa
 
 # Find overlapped ids and save them
 
@@ -221,15 +225,11 @@ cd $HOME/conserved_gene_order1/mus_reference
 
 # Run blastp. Mus musculus - Human
 
-blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_human -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 50 -max_hsps 1 -max_target_seqs 1 -query $HOME/conserved_gene_order1/mus_reference/mus_reference_clean1.fa >'results_mus-human.txt'
+blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_human -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 50 -max_hsps 1 -query $HOME/conserved_gene_order1/mus_reference/mus_reference_clean1.fa >'results_mus-human.txt'
 
 # Run bastp. Human - Mus musculus
 
-blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_mus -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen"  -qcov_hsp_perc 50 -max_hsps 1 -max_target_seqs 1 -query $HOME/conserved_gene_order1/human_reference/human_reference_clean1.fa >'results_human-mus.txt'
-
-# Run blastp. Mus - Mus
-
-#blastp -num_threads 16 -db $HOME/conserved_gene_order/blast_db/database_mus -evalue 1e-10 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen" -qcov_hsp_perc 80 -max_hsps 1 -max_target_seqs 1 -query $HOME/conserved_gene_order/mus_reference/mus_reference_clean.fa >'results_mus.txt'
+blastp -num_threads 16 -db $HOME/conserved_gene_order1/blast_db/database_mus -evalue 1e-6 -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore slen qlen"  -qcov_hsp_perc 50 -max_hsps 1 -query $HOME/conserved_gene_order1/human_reference/human_reference_clean1.fa >'results_human-mus.txt'
 
 
 # Find reciprocal blast results
@@ -241,7 +241,17 @@ cat reciprocal_hum-mus*.txt >> reciprocal_hum-mus_all.txt
 tr -d "['],"< reciprocal_hum-mus_all.txt > reciprocal_h-mus.txt
 rm reciprocal_hum-mus*.txt
 cd $HOME
-python3 order2.py
+python3 mybl_2.py
+cd $HOME
+python3 order_hum-mus.py
+cd $HOME/conserved_gene_order1/mus_reference
+python3 CGO_res_h-mus.py
+
+
+
+
+
+
 
 # 3d Group : Mus- Macaca
 
