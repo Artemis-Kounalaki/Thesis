@@ -14,7 +14,6 @@ def order(path_rec,reciprocal, path_ref_clean, clean_ref, path_sub_clean, clean_
     # Make dcitionary with keys the human proteins and values the 'similar' macaca proteins.
     data = np.loadtxt(reciprocal, dtype=str)
     data2=np.sort(data[:,0:2],axis=1)
-    print(data2[0,:])
     Diction = defaultdict(list)
     for element in data2:
         Diction[element[1]].append(element[0])
@@ -26,14 +25,10 @@ def order(path_rec,reciprocal, path_ref_clean, clean_ref, path_sub_clean, clean_
     for key, value in new_Dic.items():
         pr_hum.append(key)
         pr_mac.append(value)
-    print(len(pr_mac))
-    print(pr_hum[0:2])
-    print(pr_mac[0:2])
-
 
     os.chdir(os.path.expanduser(path_ref_clean))
     df_human = pd.read_csv(clean_ref, sep="\t")
-    print(df_human)
+
 
     os.chdir(os.path.expanduser(path_sub_clean))
     df_macaca = pd.read_csv(clean_sub, sep="\t")
@@ -49,7 +44,7 @@ def order(path_rec,reciprocal, path_ref_clean, clean_ref, path_sub_clean, clean_
     counter=range(len(pr_mac))
     for i in counter:
         if i%1000 == 0:
-            print('1000')
+            #print('1000')
         for p in pr_mac[i]:
             pr_h=pr_hum[i]
             pr_m=p
