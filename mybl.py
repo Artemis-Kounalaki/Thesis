@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-def my_blast(path,org,file_name):
+def my_blast(path,file_name):
 
 
     # Load reciprocal results
