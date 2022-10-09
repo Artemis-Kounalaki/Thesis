@@ -1,10 +1,7 @@
 import os
 import numpy as np
 from collections import defaultdict
-import re
-import itertools
 import pandas as pd
-import ast
 
 def order(path_rec,reciprocal, path_ref_clean, clean_ref, path_sub_clean, clean_sub, path_save_CGO, path_save_nCGO):
     os.chdir(os.path.expanduser(path_rec))
