@@ -275,4 +275,6 @@ cat reciprocal_mus-mac*.txt >> reciprocal_mus-mac_all.txt
 tr -d "['],"< reciprocal_mus-mac_all.txt > reciprocal_mus-m.txt
 rm reciprocal_mus-mac*.txt
 cd $HOME
-python3 order3.py
+python3 mybl_3.py
+cd $HOME
+python3 order_mus-mac.py 
