@@ -11,10 +11,10 @@ def order(path_rec,reciprocal, path_ref_clean, clean_ref, path_sub_clean, clean_
 
 
 
-    # Make dcitionary with keys the human proteins and values the 'similar' macaca proteins.
+    # Make dcitionary with keys the human proteins and values the hits of macaca proteins.
     data = np.loadtxt(reciprocal, dtype=str)
     data2=np.sort(data[:,0:2],axis=1)
-    print(data2[0,:])
+    #print(data2[0,:])
     Diction = defaultdict(list)
     for element in data2:
         Diction[element[1]].append(element[0])

@@ -4,18 +4,18 @@ import seaborn as sns
 from matplotlib import pyplot
 import warnings
 
-def stat(path,txt_file, reciprocal_file):
+def stat(path1,txt_file, reciprocal_file, path2):
 
     # Statistic between GCOs and nGCOs identity
-    #os.chdir(os.path.expanduser(path))
+    os.chdir(os.path.expanduser(path1))
     warnings.simplefilter(action='ignore', category=FutureWarning)
     pd.options.mode.chained_assignment = None
 
-    f= open('testanal_h-mus_my.txt',"w+")
+    f= open(txt_file,"w+")
     f.write('This is a statistical test applying on the results of RBH between groups of GCOs/nGCOs.''\n')
 
     # Load GCOs nGCOs results
-    df_al = pd.read_csv('CGO_nCGO_h-mus.txt', sep='\t')
+    df_al = pd.read_csv(reciprocal_file, sep='\t')
     df_al.columns=['qseqid', 'sseqid', 'pident', 'length', 'mismatch', 'gapopen', 'qstart', 'qend', 'sstart', 'send', 'evalue', 'bitscore', 'slen', 'qlen', 'Conserved']
     identity_cgo = df_al.pident[df_al.Conserved==1]
     identity_ncgo = df_al.pident[df_al.Conserved==0]
@@ -30,7 +30,7 @@ def stat(path,txt_file, reciprocal_file):
     # Find paralogs
     f.write('Loading human paralogs ... \n')
 
-
+    os.chdir(os.path.expanduser(path2))
     df_paralogs = pd.read_csv('results_human.txt', sep='\t', header=None)
     df_paralogs.columns = ['qseqid', 'sseqid', 'pident', 'length', 'mismatch', 'gapopen',
                            'qstart', 'qend', 'sstart', 'send', 'evalue', 'bitscore', 'slen', 'qlen']
@@ -53,6 +53,7 @@ def stat(path,txt_file, reciprocal_file):
     only_pairs=only_pairs[only_pairs['qseqid'].isin(keep) & only_pairs['sseqid'].isin(keep)]
     only_pairs = only_pairs.reset_index(drop=True)
     par = pd.unique(only_pairs[['qseqid', 'sseqid']].values.ravel())
+    os.chdir(os.path.expanduser(path1))
 
 
     # Statistic paralog conserved and paralog non conserved

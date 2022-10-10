@@ -167,6 +167,7 @@ python3 mybl_1.py
 cd $HOME
 python3 order_hum-mac.py
 python3 CGO_res_h-m.py
+python3 statistics_h-mac.py
 
 
 
@@ -243,12 +244,12 @@ python3 mybl_2.py
 cd $HOME
 python3 order_hum-mus.py
 python3 CGO_res_h-mus.py
+python3 statistics_h-mus.py
 
 
 
 
 
-#EDW stop
 
 # 3d Group : Mus- Macaca
 
@@ -275,3 +276,5 @@ rm reciprocal_mus-mac*.txt
 cd $HOME
 python3 mybl_3.py
 python3 order_mus-mac.py
+python3 CGO_res_m-m.py
+python3 statistics_m-m.py
