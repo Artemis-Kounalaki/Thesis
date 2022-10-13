@@ -7,7 +7,7 @@ pd.set_option('display.max_rows', 50)
 pd.set_option('display.max_columns', 50)
 
 # No hits in macaca human - macaca
-df_h_mac = pd.read_csv('al.txt', sep='\t')
+df_h_mac = pd.read_csv('CGO_nCGO_h-mac.txt', sep='\t')
 hits_mac_h= df_h_mac.iloc[:,1].tolist()
 
 
@@ -20,7 +20,7 @@ no_hits_mac_h= ids_macaca[~ids_macaca.isin(hits_mac_h)]
 
 # No hits in mus human-mus
 
-df_h_mus = pd.read_csv('al_mus.txt', sep='\t')
+df_h_mus = pd.read_csv('CGO_nCGO_h-mus.txt', sep='\t')
 hits_mus_h= df_h_mus.iloc[:,1].tolist()
 
 
@@ -34,7 +34,7 @@ no_hits_mus_h= ids_mus[~ids_mus.isin(hits_mus_h)]
 
 # No hits mus-macaca
 # mac
-df_m = pd.read_csv('al_m-m.txt', sep='\t')
+df_m = pd.read_csv('CGO_nCGO_m-m.txt', sep='\t')
 hits_m_mac= df_m.iloc[:,1].tolist()
 no_hits_mac_m = ids_macaca[~ids_macaca.isin(hits_m_mac)]
 
@@ -51,11 +51,11 @@ print(pd.merge(no_hits_mus_h, no_hits_mus_m, how='inner'))
 
 # No hits in human human - macaca
 
-df_h_mac = pd.read_csv('al.txt', sep='\t')
+df_h_mac = pd.read_csv('CGO_nCGO_h-mac.txt', sep='\t')
 print(df_h_mac)
 hits_hum_mac= df_h_mac.iloc[:,0].tolist()
 
-ids_hum= pd.read_csv('clean_ids_human.txt', sep='\t')
+ids_hum= pd.read_csv('clean_ids.txt', sep='\t')
 ids_hum = ids_hum.iloc[:,1]
 print(ids_hum)
 
@@ -63,7 +63,7 @@ no_hits_hum_mac= ids_hum[~ids_hum.isin(hits_hum_mac)]
 print(no_hits_hum_mac)
 
 # No hits in human human - mus
-df_h_mus = pd.read_csv('al_mus.txt', sep='\t')
+df_h_mus = pd.read_csv('CGO_nCGO_h-mus.txt', sep='\t')
 hits_hum_mus= df_h_mus.iloc[:,0].tolist()
 
 
@@ -93,7 +93,7 @@ only_pairs = only_pairs.reset_index(drop=True)
 par= pd.unique(only_pairs[['qseqid','sseqid']].values.ravel())
 
 
-# 1391 found as common paralogs analysis
+# 137 found as common paralogs analysis
 
 com=common[common.ID.isin(par)]
 com1=pd.unique(com.values.ravel())
@@ -108,7 +108,7 @@ print(matches[~matches.pairs.isin(s1.pairs)])
 
 # Plot no hits in barplot
 
-x = [u'Macaca in H-Mac', u'Macaca in Mus-Macaca', u'Common',u'Mus in H-MUs',u'Mus in Mus-Mac',u'Common', u'Human in H-Mus',u'Human in H-Macaca',u'Common',u'Common Paralogs']
+x = [u'Macaca Proteins in H-Mac', u'Macaca  proteins in Mus-Macaca', u'Common no hits',u'Mus proteins in H-MUs',u'Mus proteins in Mus-Mac',u'Common no hits', u'Human proteins in H-Mus',u'Human proteins in H-Macaca',u'Common no hits',u'Common no hits with Paralog']
 y = [len(no_hits_mac_h), len(no_hits_mac_m), len(pd.merge(no_hits_mac_h, no_hits_mac_m, how='inner')),len(no_hits_mus_h), len(no_hits_mus_m),len(pd.merge(no_hits_mus_h, no_hits_mus_m, how='inner')),len(no_hits_hum_mus),len(no_hits_hum_mac),len(pd.merge(no_hits_hum_mus, no_hits_hum_mac, how='inner')),len(common[common.ID.isin(par)])]
 fig, ax = plt.subplots()
 width = 0.5
@@ -122,4 +122,3 @@ plt.ylabel('Groups')
 for i, v in enumerate(y):
     ax.text(v +5, i - .1, str(v), color='indianred', fontweight='bold')
 plt.savefig(os.path.join('test.png'), dpi=300, format='png', bbox_inches='tight')
-
