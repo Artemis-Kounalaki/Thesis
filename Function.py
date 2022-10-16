@@ -7,7 +7,6 @@ import ast
 
 os.chdir(os.path.expanduser('~/conserved_gene_order/macaca_reference'))
 
-
 # Make dcitionary with keys the human proteins and values the 'similar' macaca proteins.
 
 data = np.loadtxt('Reciprocal_h-m.txt', dtype=str)
