@@ -1,11 +1,10 @@
 ## Guideline to run files. <br/>
-**Markdown files.** <br/>
-TO RUN THE DEMO:
-There are 2 markdown files which explain the goal of every script in this repositoty. <br/>
-Their names: 'Human_paralogs.md' and 'Gene_order_finder.md'. <br/>
+**Markdown file.** <br/>
+There are 1 markdown fas example. <br/>
+
 
 **Caution!.** <br/>
-This demo icludes an implementation of blastp algorithm. In order to run this locally please chooce the number of cores that you want to use.<br/>
+This demo icludes an implementation of blastp algorithm. In order to run this locally please chooce the number of cores that you want to use in script_all.sh.<br/>
 
 **Run files.** <br/>
 script_all.sh : This bash file contains the code for the process until no hits analysis with 'calls' to the others scripts.<br/>
