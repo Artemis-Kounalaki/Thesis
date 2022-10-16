@@ -2,7 +2,7 @@ import pandas as pd
 from scipy import stats
 
 # Load RBH results with GCO info (1:GCO,0:NGCO)
-df_al = pd.read_csv('CGO_nCGO_h-mac.txt', sep='\t')
+df_al = pd.read_csv('CGO_nCGO_h-mus.txt', sep='\t')
 df_al.columns=['qseqid', 'sseqid', 'pident', 'length', 'mismatch', 'gapopen', 'qstart', 'qend', 'sstart', 'send', 'evalue', 'bitscore', 'slen', 'qlen','Conserved']
 print(df_al)
 
@@ -73,3 +73,7 @@ nc_nuni.to_csv('~/nc_nuni.txt', header=None, index=None)
 #Save cons/ncons uni groups
 c_uni.to_csv('~/c_uni.txt', header=None, index=None)
 nc_uni.to_csv('~/nc_uni.txt', header=None, index=None)
+
+#Save cons/ncons
+target_c.qseqid.to_csv('~/target_c.txt', header=None, index=None)
+target_nc.qseqid.to_csv('~/target_nc.txt', header=None, index=None)
