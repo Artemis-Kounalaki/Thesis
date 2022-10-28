@@ -1,6 +1,7 @@
 import ast
 import os
 
+# After finfing the isoforms, with this function we clear genome from isoforms.
 
 def clear_genome(path,reference,overlapped,save):
     os.chdir(os.path.expanduser(path))
