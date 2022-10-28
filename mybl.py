@@ -1,6 +1,8 @@
 import pandas as pd
 import os
 
+# Function of rbh in reeciprocal blast results
+
 def my_blast(path,file_name):
 
 
