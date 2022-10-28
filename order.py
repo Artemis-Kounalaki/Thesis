@@ -6,6 +6,9 @@ import itertools
 import pandas as pd
 import ast
 
+#This is the main function that find GCOs and nGCOs from RBH results.
+
+
 def order(path_rec,reciprocal, path_ref_clean, clean_ref, path_sub_clean, clean_sub, path_save_CGO, path_save_nCGO):
     os.chdir(os.path.expanduser(path_rec))
 
