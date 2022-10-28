@@ -1,3 +1,5 @@
+# GSE study proceed in r
+
 BiocManager::install("GEOquery")
 BiocManager::install("hgu133a.db")
 
