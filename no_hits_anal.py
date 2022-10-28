@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
+#Analysis in no hits of all groups.
 
 pd.set_option('display.max_rows', 50)
 pd.set_option('display.max_columns', 50)
