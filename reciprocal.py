@@ -3,6 +3,8 @@ import numpy as np
 import os
 import itertools
 
+# Function that finds from blast results the reciprocal results.
+
 def reciprocal(path1, blast_results1,blast_results2, save1, save2) :
 
     #Read blast results - make numpy array sorted
