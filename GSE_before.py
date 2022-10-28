@@ -1,6 +1,8 @@
 import pandas as pd
 from scipy import stats
 
+# Groups preparation for GSE study
+
 # Load RBH results with GCO info (1:GCO,0:NGCO)
 df_al = pd.read_csv('CGO_nCGO_h-mus.txt', sep='\t')
 df_al.columns=['qseqid', 'sseqid', 'pident', 'length', 'mismatch', 'gapopen', 'qstart', 'qend', 'sstart', 'send', 'evalue', 'bitscore', 'slen', 'qlen','Conserved']
