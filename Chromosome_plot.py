@@ -7,6 +7,7 @@ from scipy.stats import mannwhitneyu
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import numpy as np
 
 
 # Find paralogs
@@ -144,38 +145,7 @@ def Chrom(lis):
     lis_c.append(len(lis[lis['Chrom']=='Y']))
     return lis_c
 
-'''
-# MANY HISTOGRAMS
-#pd.pivot_table(chr1, index='A', columns='Chrom', values='B').plot(kind='bar')
-def plot_list(len_chr,name):
-    x=[u'1', u'2', u'3', u'4', u'5', u'6', u'7', u'8', u'9', u'10', u'11', u'12', u'13', u'14', u'15', u'16', u'17', u'18', u'19', u'20', u'21', u'22',  u'X', u'Y']
-    y=(np.array(len_chr)/np.array(len_chr_g))*100
-    fig, ax = plt.subplots()
-    width = 0.4
-    ind = np.arange(len(y))
-    ax.barh(ind, (np.array(len_chr)/np.array(len_chr_g))*100, width, color="navajowhite")
-    ax.set_yticks(ind+width/2)
-    ax.set_yticklabels(x, minor=False)
-    plt.title(name)
-    plt.ylabel('Chromosome')
-    plt.xlabel('Gene Percentage')
-    count=-1
-    for i, v in enumerate(y):
-        count+=1
-        ax.text(v +0.15, i - .1, str(round(v,2)), color='indianred', fontweight='bold')
-    fig.set_size_inches(10.5, 6.5, forward=True)
-
-
-plot_list(Chrom(CGO),'CGOs in Chromosome Level')
-plot_list(Chrom(nCGO),'nCGOs in Chromosome Level')
-plot_list(Chrom(CGO_Par),'CGOs with Paralog in Chromosome Level')
-plot_list(Chrom(nCGO_Par),'Non-CGO with Paralog in Chromosome Level')
-plot_list(Chrom(nCGO_nPar),'Non-CGO with no Paralog in Chromosome Level')
-plot_list(Chrom(CGO_nPar),'CGOs with no Paralog in Chromosome Level')
-
-'''
-import matplotlib.pyplot as plt
-import numpy as np
+#One chromosome plot of subgroups
 
 CGO_Par = np.array(np.array(Chrom(CGO_Par))/np.array(len_chr_g))*100
 CGO_nPar = np.array(np.array(Chrom(CGO_nPar))/np.array(len_chr_g))*100
