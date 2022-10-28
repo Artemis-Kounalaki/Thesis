@@ -1,6 +1,6 @@
 ## Guideline to run files. <br/>
 **Markdown file.** <br/>
-There are 1 markdown fas example. <br/>
+There is 1 markdown as example. <br/>
 
 
 **Caution!.** <br/>
