@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import os
 
-#This is the main function that find GCOs and nGCOs from RBH results.
+#This is the main function that merge RBH results with GCOs/nGCOs column.
 
 def CGO_table(path_CGO, CGO_file, nCGO_file, reciprocal_file,save_table):
     os.chdir(os.path.expanduser(path_CGO))
