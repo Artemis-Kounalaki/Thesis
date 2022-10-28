@@ -1,3 +1,5 @@
+# Script that implements: RBH results, GCOs/nGCOs, statistical results & no hits.
+
 # Make a file for the whole process.
 
 mkdir $HOME/conserved_gene_order1
