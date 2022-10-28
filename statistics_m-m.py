@@ -3,6 +3,8 @@ from scipy import stats
 import os
 import warnings
 
+# Function with statistics in GCOS/nGCOs in group 3: mouse-macaca
+
 def stat(path,txt_file, reciprocal_file):
 
     # Statistic between GCOs and nGCOs identity
