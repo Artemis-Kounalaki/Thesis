@@ -126,20 +126,3 @@ sns_plot3.savefig("heatmap11-0.png")
 sns_plot4=sns.clustermap(tab,metric='correlation', method="average", row_colors = row_colors, standard_scale=1, cmap='pink',figsize=(10,10))
 sns_plot4.savefig("heatmap11-1.png")
 plt.show()
-
-
-# PCA
-
-sns.set(style='whitegrid', palette='Set2')
-pca = PCA(n_components=36)
-X = pca.fit(tab).transform(tab)
-le = LabelEncoder()
-le.fit(target)
-x_lan=le.transform(target)
-pca_df = pd.DataFrame(columns = ['x', 'y', 'name', 'label'])
-pca_df['PCA1'] = X[:, 0]
-pca_df['PCA2'] = X[:, 1]
-pca_df['label'] = x_lan
-ax = sns.scatterplot(x='PCA1', y='PCA2', hue='label', data=pca_df)
-plt.legend(bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-plt.show()
