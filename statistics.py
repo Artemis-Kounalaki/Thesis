@@ -4,6 +4,8 @@ import seaborn as sns
 from matplotlib import pyplot
 import warnings
 
+# Function with statistics in GCOS/nGCOs
+
 def stat(path1,txt_file, reciprocal_file, path2):
 
     # Statistic between GCOs and nGCOs identity
