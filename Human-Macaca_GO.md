@@ -18,7 +18,6 @@ wget 'ftp://ftp.ensembl.org/pub/release-100/fasta/homo_sapiens/pep/Homo_sapiens.
 gunzip Homo_sapiens.GRCh38.pep.all.fa.gz
 
 
-
 # Make sequences in one line
 
 awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' < Homo_sapiens.GRCh38.pep.all.fa > human_reference.fa
