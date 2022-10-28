@@ -2,6 +2,8 @@ import pandas as pd
 import re
 import os
 
+#Function that finds the isoforms (overlapped proteins) from proteomes.
+
 def ov_ids(path,org,all_ids,overl_file,clean_file):
 
     # Make a table with all existing ids from reference genome
